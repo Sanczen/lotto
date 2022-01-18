@@ -97,3 +97,146 @@ namespace ConsoleApp1
                 }
                 else
                 {
+                    i--;
+                }
+            }
+            Array.Sort(wylosowane);
+            Console.WriteLine("wylosowane liczby to:");
+            foreach (int liczba in wylosowane)
+            {
+                Console.Write(liczba + ", ");
+            }
+            int[] trafione = SprawdzKupon(kupon, wylosowane);
+            int wartosc = 0;
+            int wygrana = 0;
+
+            Console.WriteLine();
+            if (trafione[0] > 0)
+            {
+                wartosc = trafione[0] * 24;
+                Console.WriteLine("3 Trafiena: {0} +{1}zł", trafione[0], wartosc);
+                wygrana += wartosc;
+            }
+            if (trafione[1] > 0)
+            {
+                wartosc = trafione[0] * rnd.Next(100, 301);
+                Console.WriteLine("3 Trafiena: {0} +{1}zł", trafione[1], wartosc);
+                wygrana += wartosc;
+            }
+            if (trafione[2] > 0)
+            {
+                wartosc = trafione[2] * rnd.Next(4000, 8001);
+                Console.WriteLine("3 Trafiena: {0} +{1}zł", trafione[2], wartosc);
+                wygrana += wartosc;
+            }
+            if (trafione[3] > 0)
+            {
+                wartosc = (trafione[3] * kumulacja) / (trafione[3] + rnd.Next(0, 5));
+                Console.WriteLine("3 Trafiena: {0} +{1}zł", trafione[3], wartosc);
+                wygrana += wartosc;
+            }
+            return wygrana;
+        }
+
+        private static int[] SprawdzKupon(List<int[]> kupon, int[] wylosowane)
+        {
+            int[] wygarne = new int[4];
+            int i = 0;
+            Console.WriteLine("\n\nTWÓj Kupon:");
+            foreach(int[] los in kupon)
+            {
+                i++;
+                Console.Write(i + ": ");
+                int trafien = 0;
+                foreach(int liczba in los)
+                {
+                    if (wylosowane.Contains(liczba))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write(liczba + ", ");
+                        Console.ResetColor();
+                        trafien++;
+                    }
+                    else
+                    {
+                        Console.Write(liczba + ", ");
+                    }
+                }
+                switch (trafien)
+                {
+                    case 3:
+                        wygarne[0]++;
+                        break;
+                    case 4:
+                        wygarne[1]++;
+                        break;
+                    case 5:
+                        wygarne[2]++;
+                        break;
+                    case 6:
+                        wygarne[3]++;
+                        break;
+                }
+                Console.WriteLine(" - Trafiono {0}/6", trafien);
+            }
+
+            return wygarne;
+        }
+
+        private static int[] PostawLos()
+        {
+            int[] liczby = new int[6];
+            int liczba = -1;
+            for (int i = 0; i < liczby.Length; i++)
+            {
+                liczba = -1;
+                Console.Clear();
+                Console.WriteLine("Postawione liczby;");
+                foreach(int l in liczby)
+                {
+                        if (l > 0)
+                    {
+                        Console.WriteLine(l + ", ");
+                    }
+                }
+                Console.WriteLine("\n\nWybierz liczbę od 1 do 49:");
+                Console.WriteLine("{0}/6: ", i + 1);
+                bool prawidlowa = int.TryParse(Console.ReadLine(), out liczba);
+                if(prawidlowa && liczba >= 1 && liczba <= 49 && !liczby.Contains(liczba))
+                {
+                    liczby[i] = liczba;
+                }
+                else
+                {
+                    Console.WriteLine("Niestaty, błędna liczba");
+                    i--;
+                    Console.ReadKey();
+                }
+            }
+            Array.Sort(liczby);
+            return liczby;
+        }
+        private static void WyswietlKuoon(List<int[]> kupon)
+        {
+            if(kupon.Count == 0)
+            {
+                Console.WriteLine("Nie postawiłeś losów");
+            }
+            else
+            {
+                int i = 0;
+                Console.WriteLine("\nTWÓj Kupon");
+                foreach (int[] los in kupon)
+                {
+                    i++;
+                    Console.WriteLine(i + ":");
+                    foreach (int liczba in los)
+                    {
+                        Console.WriteLine(liczba + ",");
+                    }
+                    Console.WriteLine();
+                }
+            }
+        }
+    }
+}
